@@ -1,10 +1,13 @@
 import json
+from pyspark.sql import SparkSession
 from pyspark.sql.types import *
 from pyspark.sql.functions import *
 from pyspark.ml import Pipeline
 from pyspark.ml.feature import Imputer, StringIndexer, StandardScaler, VectorAssembler
 from pyspark.ml.regression import LinearRegression
 from pyspark.ml.evaluation import RegressionEvaluator
+
+spark = SparkSession.builder.appName("Basics").getOrCreate()
 
 # Load configuration from JSON file
 with open('config.json') as config_file:
