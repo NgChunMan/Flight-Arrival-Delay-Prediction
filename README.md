@@ -48,6 +48,32 @@ Due to the large size of the datasets, they are hosted on Google Drive. Please d
 - [airports.csv](https://drive.google.com/file/d/1Qbgdx4UuYYkOK2inwSUW8VCXUie5hqcb/view?usp=drivesdk)
 - [airlines.csv](https://drive.google.com/file/d/1hLzxNORaUBIiFxZ2be8V7bqOIL1N4h8P/view?usp=drivesdkl)
 
+## Prerequisites
+
+Before running the script, ensure you have the following installed:
+
+1. Java
+Apache Spark requires Java to be installed on your system. Make sure to install Java 8 or later.
+
+Installation on macOS: You can install Java via Homebrew:
+```
+brew install openjdk@11
+```
+Installation on Linux: You can install Java using apt (Ubuntu/Debian) or yum (CentOS/RedHat):
+```
+sudo apt update
+sudo apt install openjdk-11-jdk
+```
+Installation on Windows: Download the Java JDK from the official Oracle website.
+
+After installation, set the JAVA_HOME environment variable:
+On macOS/Linux:
+```
+export JAVA_HOME=$(/usr/libexec/java_home -v 11)   # or your version
+export PATH=$JAVA_HOME/bin:$PATH
+```
+On Windows, you can set JAVA_HOME in the System Properties > Environment Variables.
+
 ## Getting Started
 1. Clone the repository:
 ```
