@@ -11,7 +11,10 @@ The dataset used in this project consists of three primary files:
 - airports.csv: Contains details about the airports, including their location and IATA codes.
 - airlines.csv: Contains information about the airlines, including their IATA codes.
 
-These datasets are used to train the model to predict the ARRIVAL_DELAY feature based on the available flight-related information.
+Note on the Airline Table:
+In this project, we do not use the airlines.csv file, as it only includes the full names of airline companies, which are not relevant for predicting flight delays. Therefore, we will be focusing only on the flights.csv and airports.csv datasets for feature extraction and model training.
+
+You can safely ignore the airlines.csv file when running the project.
 
 ## Project Workflow
 
@@ -44,8 +47,6 @@ Due to the large size of the datasets, they are hosted on Google Drive. Please d
 - [airports.csv](https://drive.google.com/file/d/1Qbgdx4UuYYkOK2inwSUW8VCXUie5hqcb/view?usp=drivesdk)
 - [airlines.csv](https://drive.google.com/file/d/1hLzxNORaUBIiFxZ2be8V7bqOIL1N4h8P/view?usp=drivesdkl)
 
-After downloading, make sure to update the file paths in your script accordingly.
-
 ## Getting Started
 1. Clone the repository:
 ```
@@ -53,7 +54,9 @@ git clone https://github.com/NgChunMan/Flight-Arrival-Delay-Prediction.git
 cd Flight-Arrival-Delay-Prediction
 ```
 
-2. Install the required dependencies using pip:
+2. After cloning the repository, open the config.json file and replace the flights_path and airports_path fields with the correct paths to the flights.csv and airports.csv files on your local machine or cloud storage.
+   
+3. Install the required dependencies using pip:
 ```
 pip install -r requirements.txt
 ```
