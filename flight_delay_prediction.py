@@ -8,24 +8,12 @@ from pyspark.ml.feature import Imputer, StringIndexer, StandardScaler, VectorAss
 from pyspark.ml.regression import LinearRegression
 from pyspark.ml.evaluation import RegressionEvaluator
 
-# Load configuration from JSON file
-with open('config.json') as config_file:
-    config = json.load(config_file)
-
-# Mount Google Drive for Google Colab users
-if 'google.colab' in sys.modules:
-    # mount google drive
-    from google.colab import drive
-    drive.mount('/content/gdrive')
-    path_to_file = config['path_to_file']  # Adjust the path accordingly
-    os.chdir(path_to_file)
-    !pwd
-
 spark = SparkSession.builder.appName("Basics").getOrCreate()
 
 # Load Data
-flights_path = config['flights_path']
-airports_path = config['airports_path']
+print("Start loading data from /data directory")
+flights_path = "data/flights.csv"
+airports_path = "data/airports.csv"
 
 flights_df = spark.read.option('inferSchema', 'true').option('header', 'true').csv(flights_path)
 airports_df = spark.read.option('inferSchema', 'true').option('header', 'true').csv(airports_path)
@@ -54,9 +42,11 @@ flights_df = flights_df.join(airports_origin, "ORIGIN_AIRPORT", "left")
 flights_df = flights_df.join(airports_destination, "DESTINATION_AIRPORT", "left")
 
 # Missing Value Check
+print("Start checking for missing values...")
 missing_values = flights_df.select([count(when(isnan(c) | col(c).isNull(), c)).alias(c) for c in flights_df.columns])
 
 # Missing Value Processing
+print("Start processing missing values...")
 imputer = Imputer(
     inputCols=["ORIGIN_LATITUDE", "ORIGIN_LONGITUDE", "DESTINATION_LATITUDE", "DESTINATION_LONGITUDE", "ARRIVAL_DELAY"],
     outputCols=["out_ORIGIN_LATITUDE", "out_ORIGIN_LONGITUDE", "out_DESTINATION_LATITUDE", "out_DESTINATION_LONGITUDE", "out_ARRIVAL_DELAY"])
@@ -75,6 +65,7 @@ final_df = final_df.withColumnRenamed("out_ORIGIN_LATITUDE", "ORIGIN_LATITUDE") 
                    .withColumnRenamed("out_ARRIVAL_DELAY", "ARRIVAL_DELAY")
 
 # Train Test Split
+print("Perform train test split...")
 train_df, test_df = final_df.randomSplit([0.7, 0.3], seed=42)
 
 categorical_features = ["AIRLINE", "ORIGIN_AIRPORT", "DESTINATION_AIRPORT", "ORIGIN_CITY", "ORIGIN_STATE", "DESTINATION_CITY", "DESTINATION_STATE"]
@@ -98,10 +89,11 @@ lr = LinearRegression(featuresCol="features", labelCol="ARRIVAL_DELAY")
 pipeline = Pipeline(stages=indexers + [numerical_assembler, scaler, assembler, lr])
 
 # Train the pipeline using training data
+print("Training pipeline using training data...")
 model = pipeline.fit(train_df)
 
 # Evaluate ML Pipeline
-
+print("Evaluating ML Pipeline...")
 # Training MAE
 train_predictions = model.transform(train_df)
 evaluator = RegressionEvaluator(labelCol="ARRIVAL_DELAY", predictionCol="prediction", metricName="mae")
@@ -113,5 +105,3 @@ test_predictions = model.transform(test_df)
 evaluator = RegressionEvaluator(labelCol="ARRIVAL_DELAY", predictionCol="prediction", metricName="mae")
 test_mae = evaluator.evaluate(test_predictions)
 print(f"Testing MAE: {test_mae}")
-
-
