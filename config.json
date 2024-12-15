@@ -1,5 +1,0 @@
-{
-  "flights_path": "/path/to/flights.csv",
-  "airports_path": "/path/to/airports.csv",
-  "path_to_file": "/path/to/folder/contains/csv_files"
-}
