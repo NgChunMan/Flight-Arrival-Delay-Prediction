@@ -36,6 +36,15 @@ After training the model, its performance is evaluated using the Mean Absolute E
 - Training MAE: The MAE is calculated on the training dataset.
 - Testing MAE: The MAE is calculated on the testing dataset, with the goal of achieving an MAE below 25 minutes.
 
+## Dataset Download
+
+Due to the large size of the datasets, they are hosted on Google Drive. Please download the following files and place them in the `data/` directory:
+
+- [flights.csv](https://drive.google.com/file/d/1FvNW68prpJvuNDxlI-6Rke5Pml-RmmRO/view?usp=drivesdk)
+- [airports.csv](https://drive.google.com/file/d/1Qbgdx4UuYYkOK2inwSUW8VCXUie5hqcb/view?usp=drivesdk)
+- [airlines.csv](https://drive.google.com/file/d/1hLzxNORaUBIiFxZ2be8V7bqOIL1N4h8P/view?usp=drivesdkl)
+
+After downloading, make sure to update the file paths in your script accordingly.
 
 ## Getting Started
 1. Clone the repository:
