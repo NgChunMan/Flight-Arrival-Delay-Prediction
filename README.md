@@ -25,7 +25,6 @@ The first step in the project is to preprocess the data, including:
 - Feature Selection: Relevant features for predicting arrival delays are selected from the flights.csv dataset.
 - Joining Tables: The flights.csv dataset is merged with the airports.csv dataset to enrich the data with additional airport information.
 - Missing Value Handling: Missing values are checked and imputed, ensuring no more than 10% of records are dropped.
-- Final Dataset Preparation: After preprocessing, the dataset is saved to persistent storage (e.g., DBFS or Google Drive) and then reloaded for further use.
 - Train-Test Split: The final dataset is split into training and testing sets (70% training, 30% testing).
 
 2. Building the ML Pipeline
