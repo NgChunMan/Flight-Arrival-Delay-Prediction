@@ -12,6 +12,7 @@ The dataset used in this project consists of three primary files:
 - airlines.csv: Contains information about the airlines, including their IATA codes.
 
 Note on the Airline Table:
+
 In this project, we do not use the airlines.csv file, as it only includes the full names of airline companies, which are not relevant for predicting flight delays. Therefore, we will be focusing only on the flights.csv and airports.csv datasets for feature extraction and model training.
 
 You can safely ignore the airlines.csv file when running the project.
