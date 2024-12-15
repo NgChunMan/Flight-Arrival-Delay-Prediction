@@ -1,3 +1,4 @@
+import json
 from pyspark.sql.types import *
 from pyspark.sql.functions import *
 from pyspark.ml import Pipeline
@@ -5,9 +6,13 @@ from pyspark.ml.feature import Imputer, StringIndexer, StandardScaler, VectorAss
 from pyspark.ml.regression import LinearRegression
 from pyspark.ml.evaluation import RegressionEvaluator
 
+# Load configuration from JSON file
+with open('config.json') as config_file:
+    config = json.load(config_file)
+
 # Load Data
-flights_path = '/content/gdrive/MyDrive/Big_Data/Assignment/flights.csv'
-airports_path = '/content/gdrive/MyDrive/Big_Data/Assignment/airports.csv'
+flights_path = config['flights_path']
+airports_path = config['airports_path']
 
 flights_df = spark.read.option('inferSchema', 'true').option('header', 'true').csv(flights_path)
 airports_df = spark.read.option('inferSchema', 'true').option('header', 'true').csv(airports_path)
@@ -59,35 +64,38 @@ final_df = final_df.withColumnRenamed("out_ORIGIN_LATITUDE", "ORIGIN_LATITUDE") 
 # Train Test Split
 train_df, test_df = final_df.randomSplit([0.7, 0.3], seed=42)
 
-# 2.1 Three Steps
 categorical_features = ["AIRLINE", "ORIGIN_AIRPORT", "DESTINATION_AIRPORT", "ORIGIN_CITY", "ORIGIN_STATE", "DESTINATION_CITY", "DESTINATION_STATE"]
 numerical_features = ["MONTH", "DAY", "DAY_OF_WEEK", "SCHEDULED_DEPARTURE", "DISTANCE", "SCHEDULED_ARRIVAL", "ORIGIN_LATITUDE", "ORIGIN_LONGITUDE", "DESTINATION_LATITUDE", "DESTINATION_LONGITUDE"]
 
+# Encode the categorical features
 indexers = [StringIndexer(inputCol=feature, outputCol=feature + "_index") for feature in categorical_features]
 
 numerical_assembler = VectorAssembler(inputCols=numerical_features, outputCol="numerical_features_vector")
 
+# Scaling down the numerical features
 scaler = StandardScaler(inputCol="numerical_features_vector", outputCol="scaled_num_features")
 
+# Combine different features into a vector 
 assembler = VectorAssembler(inputCols=[feature + "_index" for feature in categorical_features] + ["scaled_num_features"], outputCol="features")
 
+# Build a Linear Regression model
 lr = LinearRegression(featuresCol="features", labelCol="ARRIVAL_DELAY")
 
-# 2.2 Build ML Pipeline
+# Build ML Pipeline
 pipeline = Pipeline(stages=indexers + [numerical_assembler, scaler, assembler, lr])
 
-# 2.3 Train the pipeline using training data
+# Train the pipeline using training data
 model = pipeline.fit(train_df)
 
 # Evaluate ML Pipeline
-# 3.1 Training MAE
 
+# Training MAE
 train_predictions = model.transform(train_df)
 evaluator = RegressionEvaluator(labelCol="ARRIVAL_DELAY", predictionCol="prediction", metricName="mae")
 train_mae = evaluator.evaluate(train_predictions)
 print(f"Training MAE: {train_mae}")
 
-#3.2 Testing MAE
+# Testing MAE
 test_predictions = model.transform(test_df)
 evaluator = RegressionEvaluator(labelCol="ARRIVAL_DELAY", predictionCol="prediction", metricName="mae")
 test_mae = evaluator.evaluate(test_predictions)
