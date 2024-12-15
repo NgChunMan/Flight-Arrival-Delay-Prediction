@@ -1,4 +1,5 @@
 import json
+import sys, os
 from pyspark.sql import SparkSession
 from pyspark.sql.types import *
 from pyspark.sql.functions import *
@@ -7,11 +8,20 @@ from pyspark.ml.feature import Imputer, StringIndexer, StandardScaler, VectorAss
 from pyspark.ml.regression import LinearRegression
 from pyspark.ml.evaluation import RegressionEvaluator
 
-spark = SparkSession.builder.appName("Basics").getOrCreate()
-
 # Load configuration from JSON file
 with open('config.json') as config_file:
     config = json.load(config_file)
+
+# Mount Google Drive for Google Colab users
+if 'google.colab' in sys.modules:
+    # mount google drive
+    from google.colab import drive
+    drive.mount('/content/gdrive')
+    path_to_file = config['path_to_file']  # Adjust the path accordingly
+    os.chdir(path_to_file)
+    !pwd
+
+spark = SparkSession.builder.appName("Basics").getOrCreate()
 
 # Load Data
 flights_path = config['flights_path']
