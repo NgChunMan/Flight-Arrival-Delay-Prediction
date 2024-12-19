@@ -20,21 +20,24 @@ You can safely ignore the airlines.csv file when running the project.
 ## Project Workflow
 
 1. Data Preprocessing
+
 The first step in the project is to preprocess the data, including:
 - Loading the Data: The datasets are loaded into PySpark DataFrames.
 - Feature Selection: Relevant features for predicting arrival delays are selected from the flights.csv dataset.
 - Joining Tables: The flights.csv dataset is merged with the airports.csv dataset to enrich the data with additional airport information.
-- Missing Value Handling: Missing values are checked and imputed, ensuring no more than 10% of records are dropped.
+- Missing Value Handling: Missing values are checked and imputed.
 - Train-Test Split: The final dataset is split into training and testing sets (70% training, 30% testing).
 
 2. Building the ML Pipeline
+
 A machine learning pipeline is constructed with the following steps:
 - Encoding Categorical Features: Categorical features (e.g., airport and airline codes) are encoded into numeric values using techniques like StringIndexer.
-- Scaling Numerical Features: Numerical features (e.g., distances, times) are scaled using StandardScaler to standardize the data.
+- Scaling Numerical Features: Numerical features are scaled using StandardScaler to standardize the data.
 - Feature Vector Assembly: A feature vector is created by combining the encoded categorical features and scaled numerical features using VectorAssembler.
 - Linear Regression Model: A linear regression model is built using the preprocessed features and trained on the training dataset.
 
 3. Model Evaluation
+
 After training the model, its performance is evaluated using the Mean Absolute Error (MAE) metric:
 - Training MAE: The MAE is calculated on the training dataset.
 - Testing MAE: The MAE is calculated on the testing dataset, with the goal of achieving an MAE below 25 minutes.
@@ -44,6 +47,7 @@ After training the model, its performance is evaluated using the Mean Absolute E
 Before running the script, ensure you have the following installed:
 
 1. Java
+
 Apache Spark requires Java to be installed on your system. Make sure to install Java 8 or later.
 
 Installation on macOS: You can install Java via Homebrew:
